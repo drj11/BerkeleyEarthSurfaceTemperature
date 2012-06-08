@@ -1,0 +1,32 @@
+### Analysis Code README ###
+
+The files included in this code collection provide a MATLAB implementation 
+of the Berkeley Earth averaging process.
+
+Core code is included as BerkeleyAverage.m under the Code/Analysis directory 
+and files called from there.  In order to run this, the package will 
+need to be placed in a Matlab directory and temperatureStartup.m will 
+need to be edited to specify the target directory structure.  In addition, 
+one will also need to download a Matlab format dataset such as provided by:
+
+http://download.berkeleyearth.org/downloads/PreliminaryMatlabDataset.zip
+
+It is also possible to use the included files to explore this dataset.
+
+Many functions presented here are functionsal.  However, not all of the code
+included here will necessarily work.  In some parts there may be work product
+that reflects development paths that were subsequently abandoned.  In other
+cases there may be routines that depend on other code / data not included in
+this release.  The current code is intended mostly to allow people to review
+the core underlying algorithms used by Berkeley Earth and is not necessarily
+ready to facillitate independent research programs.  This code is simply
+provided as is.
+
+During the next couple of months the Berkeley Earth group intends to move to a 
+more user friendly distribution platform with online SVN, dedicated installer,
+and better examples and documentation.
+
+The hope is that this future version will be more directly useful for other 
+research programs.
+
+

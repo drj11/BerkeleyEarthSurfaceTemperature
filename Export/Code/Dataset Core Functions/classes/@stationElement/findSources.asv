@@ -1,0 +1,16 @@
+function f = findSources( se, sources )
+
+if ischar( sources )
+    sources = stationSourceType( sources );
+end
+
+ss = expand( se.sources );
+
+if isempty(ss)
+    f = [];
+    return;
+end
+
+res = ismember( ss,  );
+res = any(res,2);
+f = find(res);

@@ -1,0 +1,29 @@
+This file is a plain text export of a portion of the temperature data contained in Berkeley Earth Surface Temperature Analysis.
+
+The associated dataset name is shown above, while this file should have the name
+
+	site_summary.txt
+
+For general information about this data product, please refer to the associated data set readme file: README.txt
+
+The current file contains a brief summary of the geolocation data for stations appearing in this dataset.  Information is presented in tab delimited columnar format.  Primary temperature data, secondary data such as quality control flags, and other metadata can be found in other files in the same directory and should be distributed together.
+
+In addition, the files:
+
+	site_detail.txt
+	site_complete_detail.txt
+
+Provide additional information detail regarding each site and may be used in place of this file.  The current file is meant as a simple summary for user convenience and only provides basic geolocation info.
+
+The columns contained in this file are as follows:
+
+	Station ID: A unique integer identifying each station.
+
+	Latitude: The present day latitude of the station in degrees and decimal fraction of a degree.  Latitudes run from -90 to +90, where negative numbers indicate positions in the southern hemisphere.
+
+	Longitude: The present day longitude of the station in degrees and decimal fraction of a degree.  Longitudes run from -180 to +180, where negative numbers indicate positions in the western hemisphere.
+
+	Elevation: The reported elevation of the station in meters above mean sea level.
+
+
+Note that these locations reflect present station position only.  Information on historical site locations, if available, is provided in the file "site_complete_detail.txt".  Information on the state name, country of residence, various identification, and other station metadata can be found in "site_detail.txt" or "site_complete_detail.txt".

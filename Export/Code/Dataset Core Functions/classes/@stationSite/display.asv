@@ -1,0 +1,10 @@
+function display( ss )
+
+stationSite = struct();
+stationSite.name = ss.primary_name;
+stationSite.lat = ss.location.lat;
+stationSite.long = ss.location.long;
+stationSite.elev = ss.location.elev;
+stationSite.sources = ss.sources;
+
+display(stationSite)

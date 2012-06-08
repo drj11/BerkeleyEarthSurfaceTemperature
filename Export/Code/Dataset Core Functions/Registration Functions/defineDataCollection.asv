@@ -1,0 +1,16 @@
+function defineDataCollection( name, description )
+
+reg = getRegistrationStructure();
+
+if ismember( name, reg )
+    error( 'Data collection with that name already exists' );
+end
+
+index = length(reg) + 1;
+
+reg(index).name = name;
+reg(index).desc = description;
+reg(index).types = dictionary();
+
+saveRegistrationStructure( reg );
+    

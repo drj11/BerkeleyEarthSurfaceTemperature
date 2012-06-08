@@ -1,0 +1,6 @@
+function spatial_table = buildSpatialTable( correlation_table, target, ...
+    occurence_table, expand_map, nugget )
+
+% Table functions now merged with map.
+spatial_table = buildSpatialMap( correlation_table, target, ...
+    occurence_table, expand_map, nugget );

@@ -1,0 +1,64 @@
+This file is a plain text export of a portion of the temperature data contained in Berkeley Earth Surface Temperature Analysis.
+
+The associated dataset name is shown above, while this file should have the name
+
+	site_detail.txt
+
+For general information about this data product, please refer to the data set readme file: README.txt
+
+The current file is the "site_detail" export, which contains a detailed summary of the stations appearing in this dataset.  Information is presented in tab delimited columnar format.  Primary temperature data, secondary data such as quality control flags, and other metadata can be found in other files in the same directory and should be distributed together.
+
+In addition, the files:
+
+	site_summary.txt
+	site_complete_detail.txt
+
+Provide alternative ways to access information regarding each site and may be used in place of this file.  The current file is meant as a summary appropriate for most users.
+
+The columns contained in this file are as follows:
+
+	Station ID: A unique integer identifying each station
+
+	Station Name: The canonical station name
+
+	Latitude: The present day latitude of the station in degrees and decimal fraction of a degree.  Latitudes run from -90 to +90, where negative numbers indicate positions in the southern hemisphere.  Missing values are reported as -999.
+
+	Longitude: The present day longitude of the station in degrees and decimal fraction of a degree.  Longitudes run from -180 to +180, where negative numbers indicate positions in the western hemisphere.  Missing values are reported as -999.
+
+	Elevation: The reported elevation of the station in meters above mean sea level.  Missing values are reported as -999.
+
+	Latitude Uncertainty: The estimated uncertainty on the reported latitude.  Where possible this is based on appropriate metadata; however, in many cases it is simply a reflection of the precision with which the latitude was reported.  Undetermined values are reported as -9.999.
+
+	Longitude Uncertainty: The estimated uncertainty on the reported  longitude.  Where possible this is based on appropriate metadata; however, in many cases it is simply a reflection of the precision with which the longitude was reported.  Undetermined values are reported as -9.999.
+
+	Elevation Uncertainty: The estimated uncertainty on the station elevation.  Where possible this is based on appropriate metadata; however, in many cases it is simply a reflection of the precision with which the elevation was reported.  Undetermined values are reported as -9.999.
+
+	Country: The country that the station is located in.  Attempts have been made to use current geopolitical boundaries, but the countries reported here may reflect obsolete designations.  In some cases non-sovereign territories are designated when they are geographically isolated from their parent country.  For example, the Carribean island of Martinique, administered by France, is designated as "Martinique 
+[France]".  The code "[Missing]" is used if the country is not known.  The code "[Conflict]" is used if two or more data sources disagree on which country the station belongs to and further details are contained in "site_complete_detail.txt".
+
+	State / Province Code: A code indicating the state, province, or similar 	political subdivision of the designated country that the station is located in.  In most cases these use two letter codes and reflect conventional designations within the designated country.  Missing and unspecified values are blank.  Conflicting country codes are indicated as "[Conflict]", and further details are contained in "site_complete_detail.txt".
+
+	County: The name of the county, or similar political subdivision, that the station is located in.  This field is usually blank except for some stations in the United States within some datasets.
+
+	Time Zone: The UTC offset of local standard time at the location of the station, if known.  A value of -99 is used to indicate missing values.
+
+	WMO ID: The World Meteorological Organization identification number assigned to the station, if any.  Station which do not have or fail to report a WMO ID are assigned a value of -9999.  In rare cases, a station may be associated with more than one WMO ID (for example, because one of the values was an erroneous report).  Such conflicted values are reported as -5555 in this file and elaborated in "site_complete_detail.txt".
+
+	Coop ID: Identification number assigned as part of the United States Cooperative Observer Network.  The first two digits are specific to the state or territory the station resides in.  Missing values are assigned value -9999.  Stations with more than one cooperative network ID are assigned value -5555 in this file and elaborated in "site_complete_detail.txt".
+
+	WBAN ID: The Weather Bureau / Army / Navy identification number assigned to the station, if any.  Missing values reported as -9999.  Multiple values are reported as -5555 and elaborated in "site_complete_detail.txt".
+
+	ICAO ID: The International Civil Aviation Organization identification code.  This is a four letter code usually only assigned to airports.  Missing values are left blank.  If more than one value is indicated the string “[Conflict]” is used and elaborated in "site_complete_detail.txt".
+
+	# of Relocations: A number indicating the number of times that the available metadata explicitly indicates a change in station location.  Explicit relocation indicators are commonly available in the United States, but almost never available outside of it.  See "station_changes.txt" for a discussion of relocations.
+
+	# of Suggested Relocations: A number indicating the number of times that the location metadata for this station was changed during its history.  Such changes may indicate that the station moved; however, such changes may also be caused be efforts to resurvey the location of the station and/or changes in the precision with which location metadata is reported.
+
+	# of Sources: Identifies the number of different data archives that contributed to the data reported for this site.
+
+	Hash: A 128-bit MD5 hash expressed as a hexadecimal string.  This hash is derived from the station metadata, and hence uniquely identifies the station.  The intended use of this field is as an aid to help identify changes in station metadata.
+
+
+Note that the locations recorded here reflect the present station position only.  Information on historical site locations, if available, is provided in the file "site_complete_detail.txt".  That file also provides details explaining the multiple reported values on fields where a conflicted state is possible.  
+
+For additional details regarding the occurrence times of site relocations please see "site_changes.txt"

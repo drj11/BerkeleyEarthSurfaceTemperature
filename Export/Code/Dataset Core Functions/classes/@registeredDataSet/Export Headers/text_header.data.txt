@@ -1,0 +1,49 @@
+This file is a plain text export of a portion of the temperature data contained in Berkeley Earth Surface Temperature Analysis.
+
+The associated dataset name and type of data is shown above, while this file should have the name
+
+	data.txt
+
+For general information about this data product, please refer to the data set readme file: README.txt
+
+The current file is the "data" export, which contains the temperature data in tab delimited columnar format.  Secondary data including quality control flags and station metadata can be found in other files in the same directory and should be distributed together.
+
+The columns contained in this file are as follows:
+
+	Station ID: A unique integer identifying each station.  Metadata for the site is contained in the associated files labeled "site_summary" or "site_detail".
+
+	Series Number: An integer identifying each time series at the specified site.  In many cases there is only one time series for each site, and it is labeled "1".  However, sometimes there are multiple instruments or multiple techniques used to report temperature at a given location.  When this is the case, these alternative temperature histories will be allocated new record numbers starting at "1" and incrementing upward until all records are numbered.  By convention, the lowest number is used for the longest record, and the higher numbered records get progressively shorter.
+
+	Date: The date of a measurement is expressed as a year and decimal fraction of a year corresponding to the midpoint of the time period being represented.  
+
+For example, in monthly data: 
+
+	January 2005 = 2005 + (1 - 0.5) / 12 = 2005.042
+	June 2008 = 2008 + (6 - 0.5) / 12 = 2008.458
+
+For example, in daily data: 
+
+	January 25, 2005 (Day 25) = 2005 + (25 - 0.5)/365 =2005.067
+	June 3, 2008 (Day 155) = 2008 + (155 - 0.5)/366 = 2008.422
+			[Note the use of 366, during leap years.]
+
+With three decimal digits of precision, all days are uniquely identified.
+
+Standard procedures for converting decimal dates to calendar dates and vice versa are available as part of the Matlab software distributed by Berkeley Earth Surface Temperature.
+
+	Temperature: The temperature as reported in degrees Celsius.
+
+	Uncertainty: This is an estimate of the temperature uncertainty, also expressed in degrees Celsius.  Please refer to dataset README file to determine the nature of this value.  For raw data, uncertainty values usually reflect only the precision at which the measurement was reported.  For higher level data products, the uncertainty may include estimates of statistical and systematic uncertainties in addition to the measurement precision uncertainty.  In addition, the format of these values may reflect conversion from Fahrenheit.
+
+For example:  A measurement of 40.5 degrees Fahrenheit, reported to the nearest 0.1 Fahrenheit, would be reported as 4.722 C with an uncertainty of 0.0278 C ( which is +/- 0.05 F ).
+
+	Observations: For monthly measurements, this is the number of daily values used in making the monthly average.  Some daily measurements are based on a collection instantaneous measurements, for example 24 hourly values.  In this case, the number of hourly (or sub-hourly) measurements used is reported.  In many cases though, daily temperatures are based on maximum/minimum thermometer systems that do not involve instantaneous measurements.  If the number of observations is unknown or not relevant, a value of -99 is reported.
+
+	Time of Observation:  Reports the local standard time at which measurements were made to the nearest hour on a 24-hour clock.  For example, a value of 17 means that the measurement was made at 5 PM.  This defines the local "climatological day" for this measurement.  By convention, the value reported as the temperature is a measurement of the previous 24 hour period from the time of measurement.  For example, if the low temperature for the day is reported with respect to a 5 PM climatological day, then the value is the lowest measured temperature between 5 PM on the previous day and 5 PM on the current day.  Missing values are reported as -99.
+	
+
+
+The data is sorted so that Station ID, and then Duplicate Number, and then Date are guaranteed to be in ascending order.
+
+
+***Important note regarding duplicate values: This dataset may be constructed in such a way that duplicate values are possible _even within a single time series_.  For example, the series may include both a preliminary value and a final value at the same date.  Please refer to the description in the corresponding README.txt to see why duplicate values are possible for the current data product.  When duplicate values occur there will be two (or more) lines corresponding to the same date.  In most cases, there will also be information in the sources or quality control file to distinguish the two values.

@@ -1,0 +1,24 @@
+This file is a plain text export of a portion of the temperature data contained in Berkeley Earth Surface Temperature Analysis.
+
+The associated dataset name is shown above, while this file should have the name
+
+	sources.txt
+
+For general information about this data product, please refer to the data set readme file: README.txt
+
+The current file contains the per datum source flags in tab delimited columnar format.  The main temperature data, other secondary data, and station metadata can be found in other files in the same directory and should be distributed together.
+
+The columns contained in this file are as follows:
+
+	Station ID: A unique integer identifying each station.  Metadata for the site is contained in the associated files labeled "site_summary" or "site_detail".
+
+	Series Number: An integer identifying each time series at the specified site.  Refer to "data.txt" for more information.
+
+	Date: The date of a measurement is expressed as a year and decimal fraction of a year corresponding to the midpoint of the time period being represented.  Refer to "data.txt" for more information.
+
+	Flag List: A tab delimited list of source flags.  Each flag is represented by an integer, with “0” as a placeholder indicating no flag.  For convenience each row has the same number of columns.  Explanations of the source flag codes are contained in "source_flag_definitions"
+	
+
+The data is sorted so that Station ID, and then Duplicate Number, and then Date are guaranteed to be in ascending order.  This order is identical to the order in "data.txt"
+
+***Important note regarding duplicate values: This dataset may be constructed in such a way that duplicate values are possible _even within a single time series_.  Please refer to "data.txt" and the README for more information.

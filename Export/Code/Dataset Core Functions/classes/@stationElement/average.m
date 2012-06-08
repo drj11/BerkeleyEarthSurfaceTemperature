@@ -1,0 +1,354 @@
+function sx = average( se, bf )
+
+if length(se) == 1
+    sx = se;
+    return;
+end
+
+if nargin < 2
+    bf = [];
+end
+
+for k = 2:length(se)
+    if ~se(k).frequency == se(1).frequency
+        error('Unable to Average - Differing frequency');
+    end
+end
+
+output_type = 0;
+
+if length(se) == 3
+    input_types = [se.record_type];
+
+    ot7 = stationRecordType( 'OT07' );
+    ot14 = stationRecordType( 'OT14' );
+    ot21 = stationRecordType( 'OT21' );
+    f1 = find( input_types == ot7.index );
+    f2 = find( input_types == ot14.index );
+    f3 = find( input_types == ot21.index );
+    if ~isempty(f1) && ~isempty(f2) && ~isempty(f3)
+        v1 = stationRecordType( 'TAVG' );
+        output_type = v1.index;
+        average_type = 3;
+        allow_missing = 0;
+    end    
+end
+
+if output_type == 0
+    for k = 1:length(se) 
+        se(k) = makeEquivalent( se(k) );
+    end
+    input_types = [se.record_type];
+
+    allow_missing = 1;
+
+    average_type = 1;
+
+    if max(input_types) == min(input_types)
+        output_type = input_types(1);
+    elseif length(input_types) == 2
+        tmax = stationRecordType( 'TMAX' );
+        tmin = stationRecordType( 'TMIN' );
+        tavg = stationRecordType( 'TAVG' );
+
+        f1 = find( input_types == tmax.index );
+        f2 = find( input_types == tmin.index );
+        if ~isempty(f1) && ~isempty(f2)
+            output_type = tavg.index;
+            allow_missing = 0;
+            average_type = 2;
+        else
+            input_types
+            error( 'Incompatible Record Types' );
+        end
+    elseif length(input_types) == 3
+        ot7 = stationRecordType( 'OT07' );
+        ot14 = stationRecordType( 'OT14' );
+        ot21 = stationRecordType( 'OT21' );
+
+        f1 = find( input_types == ot7.index );
+        f2 = find( input_types == ot14.index );
+        f3 = find( input_types == ot21.index );
+        if ~isempty(f1) && ~isempty(f2) && ~isempty(f3)
+            v1 = stationRecordType( 'TAVG' );
+            output_type = v1.index;
+            average_type = 3;
+            allow_missing = 0;
+        else
+            input_types
+            error( 'Incompatible Record Types' );        
+        end    
+    else
+       input_types
+       error( 'Incompatible Record Types' );
+    end
+end
+
+for k = 1:length(se)
+    se(k) = makeSingleValued( se(k), bf );
+end
+
+allowed = expand( se(1).dates );
+
+for k = 2:length(se);
+    if allow_missing
+        allowed = union( expand( se(k).dates ), allowed );
+    else
+        dt = expand( se(k).dates );
+        exc = findFlags( se(k), bf );
+        dt(exc) = [];
+        
+        allowed = intersect( dt, allowed );
+    end
+end
+
+dates = allowed;
+data = zeros( 1, length(dates), 'single' );
+counts = data.*0;
+num = data.*NaN;
+tob = data.*NaN;
+flagged = data.*NaN;
+drop_flag = data;
+
+most_flags = 0;
+most_source = 0;
+for k = 1:length(se)
+    se(k).source = expand( se(k).source );
+    se(k).flags = expand( se(k).flags );    
+    
+    ls = length(se(k).source(1,:));
+    lf = length(se(k).flags(1,:));
+    
+    if ls > most_source
+        most_source = ls;
+    end
+    if lf > most_flags
+        most_flags = lf;
+    end
+end
+
+flags = zeros(length(allowed), most_flags*length(se));
+source = zeros(length(allowed), most_source*length(se));
+
+estimated_tob = data;
+estimated_num = data;
+
+for k = 1:length(se)
+    new_flagged = zeros(1,length(se(k).dates));
+    flag_pos = findFlags( se(k), bf );
+    new_flagged(flag_pos) = 1;
+    
+    new_data = expand(se(k).data);
+    
+    new_num = double(se(k).num_measurements);
+    f = ( new_num == 65535 );
+    new_num(f) = NaN;
+    
+    new_tob = double(se(k).time_of_observation);
+    f = ( new_tob == 255 );
+    new_tob(f) = NaN;
+    
+    new_dates = expand(se(k).dates);
+    new_flags = expand(se(k).flags);
+    new_source = expand(se(k).source);
+
+    [~, I1, I2] = intersect( new_dates, allowed );
+
+    both_flag = find( isnan(flagged( I2 )) | flagged( I2 ) == new_flagged( I1 ) );
+
+    I2_orig = I2;
+    I1_orig = I1;
+    if ~isempty(both_flag)            
+        I2 = I2_orig(both_flag);
+        I1 = I1_orig(both_flag);
+        
+        data(I2) = data(I2) + new_data(I1);
+        counts(I2) = counts(I2) + 1;
+        
+        f = ( isnan(num(I2)) & ~isnan(new_num(I1)) );
+        num(I2(f)) = new_num(I1(f));
+        if k > 1
+            f2 = (counts(I2(f)) > 1);
+            estimated_num(I2(f(f2))) = 1;
+        end    
+        f = ( ~isnan(num(I2)) & ~isnan(new_num(I1)) & new_num(I1) ~= num(I2) );
+        num(I2(f)) = -1;
+
+        f = ( isnan(tob(I2)) & ~isnan(new_tob(I1)) );
+        tob(I2(f)) = new_tob(I1(f));
+        if k > 1
+            f2 = (counts(I2(f)) > 1);
+            estimated_tob(I2(f(f2))) = 1;
+        end    
+        f = ( ~isnan(tob(I2)) & ~isnan(new_tob(I1)) & new_tob(I1) ~= tob(I2) );
+        tob(I2(f)) = -1;
+
+        lf = length( new_flags(1,:) );
+        flags(I2,(1:lf)+(k-1)*most_flags) = new_flags(I1,:);
+
+        ls = length( new_source(1,:) );
+        source(I2,(1:ls)+(k-1)*most_source) = new_source(I1,:);
+        
+        flagged(I2) = new_flagged(I1);
+    end
+    
+    new_unflag = find( ~isnan( flagged( I2 ) ) & flagged( I2 ) & ~new_flagged( I1 ) );
+        
+    if ~isempty(new_unflag) 
+        I2 = I2_orig(new_unflag);
+        I1 = I1_orig(new_unflag);
+        
+        data(I2) = new_data(I1);
+        counts(I2) = 1;
+
+        num(I2) = new_num(I1);
+        estimated_num(I2) = 0;
+
+        tob(I2) = new_tob(I1);
+        estimated_tob(I2) = 1;
+
+        lf = length( new_flags(1,:) );
+        flags(I2,(1:lf)+(k-1)*most_flags) = new_flags(I1,:);
+        flags(I2,1:(k-1)*most_flags) = 0;
+        
+        ls = length( new_source(1,:) );
+        source(I2,(1:ls)+(k-1)*most_source) = new_source(I1,:);      
+        source(I2,1:(k-1)*most_source) = 0;
+        
+        flagged(I2) = 0;
+        drop_flag(I2) = 1;
+    end
+    
+    new_isflag = ( (~isnan( flagged(I2) ) & ~flagged( I2 )) & new_flagged( I1 ) );
+    drop_flag( I2(new_isflag) ) = 1;
+    
+end
+
+data = data ./ counts;
+
+
+f = (counts > 1);
+if any( f )
+    switch average_type
+        case 1
+            flags(f, end+1) = dataFlags( 'AVERAGE_VALUE' );
+        case 2
+            flags(f, end+1) = dataFlags( 'AVERAGE_MAX_MIN' );
+        case 3
+            flags(f, end+1) = dataFlags( 'AVERAGE_TRIPLE' );
+    end
+end   
+
+f = (counts < length(se));
+if any(f)
+    flags(f, end+1) = dataFlags( 'AVERAGE_MISSING_VALUES' );
+end   
+
+f = logical( drop_flag );
+if any(f)
+    flags(f, end+1) = dataFlags( 'AVERAGE_BAD_FLAGGED_VALUE_DROPPED' );
+end   
+
+
+f = ( num == -1 );
+if any(f)
+    num(f) = NaN;
+    flags(f, end+1) = dataFlags( 'AVERAGE_CONFLICT_NUM' );
+end
+
+f = ( tob == -1 );
+if any(f)
+    tob(f) = NaN;
+    flags(f, end+1) = dataFlags( 'AVERAGE_CONFLICT_TOB' );
+end
+
+f = logical( estimated_tob );
+if any(f)
+    flags(f, end+1) = dataFlags( 'AVERAGE_ESTIMATED_TOB' );
+end
+
+f = logical( estimated_num );
+if any(f)
+    flags(f, end+1) = dataFlags( 'AVERAGE_ESTIMATED_NUM' );
+end
+
+
+%Clean up flags and source
+% Sort and Remove Duplicates
+flags = sort(flags,2);
+source = sort(source,2);
+
+if ~isempty(flags)
+    flen = length(flags(1,:));
+else
+    flen = 0;
+end
+if ~isempty(source)
+    slen = length(source(1,:));
+else
+    slen = 0;
+end
+
+resort_f = 0;
+for j = flen:-1:2
+    f2 = find(flags(:,j) == flags(:,j-1));
+    flags(f2,j) = 0;
+    if ~isempty(f2)
+        resort_f = 1;
+    end       
+end
+
+resort_s = 0;
+for j = slen:-1:2
+    f2 = find(source(:,j) == source(:,j-1));
+    source(f2,j) = 0;
+    if ~isempty(f2)
+        resort_s = 1;
+    end
+end
+
+if resort_f
+    flags = sort(flags, 2);
+end
+if resort_s
+    source = sort(source, 2);
+end
+
+ss = sum(flags);
+f = find(ss == 0);
+if ~isempty(f)
+    flags(:,f) = [];
+end
+
+ss = sum(source);
+f = (ss == 0);
+if any(f)
+    source(:,f) = [];
+end
+
+
+
+
+
+sx = stationElement();
+sx.record_type = output_type;
+sx.frequency = se(1).frequency;
+sx.dates = dates;
+
+dd = abs(diff(data));
+f = ( dd > 1e-7 );
+if min(dd(f)) < 0.001
+    data = round( data * 1000 ) / 1000;
+end
+sx.data = data;
+
+sx.num_measurements = num;
+sx.time_of_observation = tob;
+sx.source = source;
+sx.flags = flags;
+
+sx.auto_compress = min([se.auto_compress]);
+
+if sx.auto_compress
+    sx = compress( sx );
+end

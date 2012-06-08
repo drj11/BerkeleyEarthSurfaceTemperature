@@ -1,0 +1,24 @@
+This file is a plain text export of a portion of the temperature data contained in Berkeley Earth Surface Temperature Analysis.
+
+The associated dataset name is shown above, while this file should have the name
+
+	flags.txt
+
+For general information about this data product, please refer to the associated readme file: README.txt
+
+The current file is the "flags" export, which contains the per datum quality control flags in tab delimited columnar format.  These flags are used as indicators of how the data has been processed and any quality control issues that are known to be present.  Users of this dataset are advised to review the flags as a means of identifying problematic data which they may choose to eliminate before performing an analysis.  The primary data, station metadata, and other information about this dataset can be found in other files in the same directory and should be distributed together.
+
+The columns contained in this file are as follows:
+
+	Station ID: A unique integer identifying each station.  Metadata for the site is contained in the associated files labeled "site_summary.txt" or "site_detail.txt".
+
+	Series Number: An integer identifying each time series at the specified site.  Refer to "data.txt" for more information.
+
+	Date: The date of a measurement is expressed as a year and decimal fraction of a year corresponding to the midpoint of the time period being represented.  Refer to "data.txt" for more information.
+
+	Flag List: A tab delimited list of quality control flags.  Each flag is represented by an integer, with “0” as a placeholder indicating no flag.  For convenience each row has the same number of columns.  Explanations of the quality control flag codes are contained in "data_flag_definitions.txt"
+	
+
+The data is sorted so that Station ID, and then Duplicate Number, and then Date are guaranteed to be in ascending order.  This order is identical to the order in "data.txt"
+
+***Important note regarding duplicate values: This dataset may be constructed in such a way that duplicate values are possible _even within a single time series_.  Please refer to "data.txt" for more information.
